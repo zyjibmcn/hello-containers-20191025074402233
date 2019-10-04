@@ -16,12 +16,18 @@ FROM node:alpine
 MAINTAINER Philippe Mulet "philippe_mulet@fr.ibm.com"
 
 RUN apk update && apk upgrade
+
 # Install the application
 ADD package.json /app/package.json
 RUN cd /app && npm install
-ADD app.js /app/app.js
-ENV WEB_PORT 80
-EXPOSE  80
+COPY app.js /app/app.js
+RUN chmod -R u+x /app && \
+    chgrp -R 0 /app && \
+    chmod -R g=u /app /etc/passwd
+WORKDIR /app
+
+ENV PORT 8080
+EXPOSE 8080
 
 # Vulnerability Advisor : Fix PASS_MAX_DAYS, PASS_MIN_DAYS and PASS_MIN_LEN, common-password
 # RUN mv -f /etc/login.defs /etc/login.defs.orig
@@ -33,4 +39,4 @@ EXPOSE  80
 # RUN dpkg --purge --force-all <package>
 
 # Define command to run the application when the container starts
-CMD ["node", "/app/app.js"]
+CMD ["node", "app.js"]
