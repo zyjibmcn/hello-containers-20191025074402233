@@ -16,11 +16,16 @@
 
 var express = require('express');
 
-var PORT = process.env.PORT;
+var PORT;
+if (process.env.PORT) {
+  PORT = process.env.PORT;
+} else {
+  PORT = 80;
+}
 
 var app = express();
 app.get('/', function (req, res) {
-  res.send('Welcome to IBM Cloud DevOps using containers. Lets go use the Continuous Delivery Service');
+  res.send('Welcome to IBM Cloud DevOps using containers. Let\'s go use the Continuous Delivery Service');
 });
 
 app.listen(PORT);
